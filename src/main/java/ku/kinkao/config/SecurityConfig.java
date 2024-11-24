@@ -40,8 +40,26 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/signup")).permitAll()
+                        // unauthenticated users can read restaurants and reviews.
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/restaurants")).permitAll()
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/reviews/show/**")).permitAll()
+
+
+                        // members and admins can also add reviews
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/reviews/add/**"))
+                        .hasAnyRole("USER", "ADMIN")
+
+
+                        // admins can add restaurants
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/restaurants/add")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )      // <-- remove the semicolon
+
+
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
@@ -72,6 +90,8 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
 
 
     @Bean

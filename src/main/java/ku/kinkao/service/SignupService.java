@@ -31,6 +31,7 @@ public class SignupService {
         Member newMember = new Member();
         Member dao = modelMapper.map(dto, Member.class);
         dao.setCreatedAt(Instant.now());
+        dao.setRole("ROLE_USER");
 
 
         String hashedPassword = passwordEncoder.encode(dto.getPassword());
